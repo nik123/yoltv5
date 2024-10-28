@@ -23,7 +23,7 @@ class dotdict(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
-    
+
 ######################################
 # 0. Load config and set variables
 ######################################
@@ -50,13 +50,13 @@ sys.path.append(yolt_src_path)
 import prep_train
 import tile_ims_labels
 import post_process
-import eval
-import eval_errors
+# import eval
+# import eval_errors
 
 # check if output already exists
 results_dir = os.path.join(yolt_src_path, 'yolov5/runs/detect', config.outname_infer)
-if os.path.exists(results_dir):
-    raise ValueError('Breaking, since output directory already exists {}'.format(results_dir))
+# if os.path.exists(results_dir):
+#     raise ValueError('Breaking, since output directory already exists {}'.format(results_dir))
 
 ######################################
 # 2. Prepare data
@@ -138,7 +138,7 @@ with open(config.outpath_test_txt,'r') as f:
             print(l)
         else:
             break
-            
+
 
 ######################################
 # 3. Execute GPU inference
@@ -149,11 +149,13 @@ with open(config.outpath_test_txt,'r') as f:
 # # Results saved to yolov5/runs/detect/yoltv5_test_v0
 ######################################
 
+print(config.train_im_size)
+
 script_path = os.path.join(config.yoltv5_path, 'yoltv5/yolov5/detect.py')
-yolt_cmd = 'python {} --weights {} --source {} --img {} --conf {} ' \
+yolt_cmd = 'python3 {} --weights {} --source {} --imgsz {} --conf {} ' \
             '--name {} --nosave --save-txt --save-conf'.format(\
             script_path, config.weights_file, config.outdir_slice_ims,
-            config.train_im_size, min(config.detection_threshes), 
+            config.train_im_size, min(config.detection_threshes),
             config.outname_infer)
 print("\nyolt_cmd:", yolt_cmd)
 os.system(yolt_cmd)
